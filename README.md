@@ -232,5 +232,5 @@ Para cualquier incidencia o duda, contacta por el aula virtual o a través del c
 
 ---
 
-📘 _"El código limpio no nace, se construye."_
-— _Isaías Fernández Lozano_
+📘 _"El impedimento a la Acción, genera la Acción."_
+— _Marco Aurelio_
