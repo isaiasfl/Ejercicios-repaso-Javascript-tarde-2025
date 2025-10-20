@@ -232,5 +232,5 @@ Para cualquier incidencia o duda, contacta por el aula virtual o a través del c
 
 ---
 
-📘 _"El impedimento a la Acción, genera la Acción."_
+📘 _"El impedimento a la Acción, avanza la Acción."_
 — _Marco Aurelio_
