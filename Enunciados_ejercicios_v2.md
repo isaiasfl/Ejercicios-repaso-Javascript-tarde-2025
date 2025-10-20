@@ -12,7 +12,8 @@ Los enunciados son detallados para que sepas exactamente qué se espera de ti. C
 
 **Requisitos técnicos:**
 - Cada ejercicio en su carpeta: `src/helpers/ejercicioXX/index.js`
-- Importa en app.js: `import ejercicioXX from './helpers/ejercicioXX/index.js' para hacer pruebas, pero cuando lo subas a github para hacer la PR a la rama main del profesor quítalo y deja el app como estaba`
+- Exporta funciones: `export default { funcion1, funcion2, funcion3 }`
+- Importa en app.js: `import ejercicioXX from './helpers/ejercicioXX/index.js'`
 - Usa datos de `src/db/data.js` cuando se indique
 - Muestra resultados con `console.log()`, `console.table()`, `console.group()`
 
@@ -34,7 +35,7 @@ Map {
   101 => {
     id: 101,
     nombre: "Laptop Gaming Pro",
-    categoria: "Electrónica",
+    categoria: "Electronica",
     stockActual: 25,
     stockMinimo: 10,
     precio: 899.99,
@@ -63,7 +64,7 @@ console.log("Inventario creado con", inventario.size, "productos");
 
 **Salida esperada:**
 ```
-Inventario creado con 50 productos
+Inventario creado con 8 productos
 ```
 
 #### 2. `gestionarStock(idProducto, operacion, cantidad)`
@@ -110,10 +111,10 @@ console.table(informe.productosPorCategoria);
 **Salida esperada:**
 ```javascript
 {
-  valorTotal: 125890.75,
-  productosPorCategoria: { "Electrónica": 15, "Muebles": 12 },
-  productosBajoStock: 5,
-  stockPromedio: 45.2
+  valorTotal: 34989.23,
+  productosPorCategoria: { "Electronica": 6, "Muebles": 2, "Hogar": 1 },
+  productosBajoStock: 0,
+  stockPromedio: 26.25
 }
 ```
 
@@ -148,7 +149,7 @@ Set {101, 205, 308}
 
 **Qué debes hacer:**
 - Recorre el array de productos
-- Extrae palabras clave de: nombre, descripción, categoría, etiquetas
+- Extrae palabras clave de: nombre, descripcion, categoria, etiquetas
 - Crea un Map donde clave = término (minúsculas), valor = Set con IDs de productos
 - Guarda este Map en LocalStorage con clave "indiceBusqueda"
 - Devuelve el Map creado
@@ -162,8 +163,8 @@ console.log("Término 'laptop' encontrado en", indice.get("laptop").size, "produ
 
 **Salida esperada:**
 ```
-Índice construido con 245 términos
-Término 'laptop' encontrado en 12 productos
+Índice construido con 45 términos
+Término 'laptop' encontrado en 1 producto
 ```
 
 #### 2. `buscarProductos(termino, filtros = {})`
@@ -173,7 +174,7 @@ Término 'laptop' encontrado en 12 productos
 - Obtén el Set de IDs de productos
 - Convierte IDs a objetos de productos completos
 - Aplica filtros si se proporcionan:
-  - categoria: filtrar por categoría exacta
+  - categoria: filtrar por categoria exacta
   - rangoPrecio: [min, max] para filtrar por precio
   - valoracionMin: valoración mínima
 - Ordena resultados por valoración descendente
@@ -185,7 +186,7 @@ const resultados1 = buscarProductos("laptop");
 console.log("Resultados para 'laptop':", resultados1.length);
 
 const resultados2 = buscarProductos("laptop", {
-  categoria: "Electrónica",
+  categoria: "Electronica",
   valoracionMin: 4.0
 });
 console.log("Resultados filtrados:", resultados2.length);
@@ -193,8 +194,8 @@ console.log("Resultados filtrados:", resultados2.length);
 
 **Salida esperada:**
 ```
-Resultados para 'laptop': 12
-Resultados filtrados: 8
+Resultados para 'laptop': 1
+Resultados filtrados: 1
 ```
 
 #### 3. `gestionarFavoritos()`
@@ -249,7 +250,7 @@ Map {
     stats: {
       totalCompras: 15,
       totalGastado: 2500.50,
-      categoriaFavorita: "Electrónica"
+      categoriaFavorita: "Electronica"
     }
   }
 }
@@ -282,23 +283,20 @@ console.log("Categoría favorita:", perfil.stats.categoriaFavorita);
 **Salida esperada:**
 ```
 Perfil creado para: Ana García
-Total compras: 15
-Categoría favorita: Electrónica
+Total compras: 1
+Categoria favorita: Electronica
 ```
 
 #### 2. `encontrarUsuariosSimilares(idUsuario, limite = 3)`
 
 **Qué debes hacer:**
 - Obtén el perfil del usuario objetivo
-- Compara con todos los demás usuarios usando criterios:
-  - Ciudad idéntica (20 puntos)
-  - Diferencia de edad ≤ 5 años (15 puntos)
-  - Hobbies en común (10 puntos por hobby)
-  - Nivel idéntico (10 puntos)
-  - Rango de gasto similar ±20% (15 puntos)
-- Calcula puntuación máxima de 100
-- Ordena por puntuación descendente y limita al número solicitado
-- Devuelve array de usuarios similares con puntuación
+- Compara con todos los demás usuarios usando criterios simples:
+  - Ciudad idéntica: suma 30 puntos
+  - Por cada hobby en común: suma 10 puntos
+- Ejemplo: Si usuario A y B comparten ciudad (30) + 2 hobbies (20) = 50 puntos
+- Ordena usuarios por puntuación descendente
+- Devuelve los primeros 'limite' usuarios con su puntuación total
 
 **Ejemplo de llamada:**
 ```javascript
@@ -312,9 +310,9 @@ similares.forEach(sim => {
 **Salida esperada:**
 ```
 Usuarios similares encontrados: 3
-Carlos Ruiz - Similitud: 85%
-Laura Martínez - Similitud: 72%
-María López - Similitud: 68%
+Juan Martínez - Similitud: 50%
+María López - Similitud: 40%
+Carlos Rodríguez - Similitud: 30%
 ```
 
 #### 3. `generarRecomendaciones(idUsuario, cantidad = 5)`
@@ -324,27 +322,23 @@ María López - Similitud: 68%
 - Identifica productos comprados por usuarios similares que el usuario objetivo no tiene
 - Filtra productos disponibles (stock > 0)
 - Prioriza productos de la categoría favorita del usuario
-- Calcula puntuación de recomendación:
-  - Popularidad entre usuarios similares (50%)
-  - Categoría preferida del usuario (30%)
-  - Valoración del producto (20%)
-- Devuelve array de productos recomendados con puntuación
+- Devuelve array de productos recomendados
 
 **Ejemplo de llamada:**
 ```javascript
 const recomendaciones = generarRecomendaciones(1, 3);
 console.log("Recomendaciones generadas:", recomendaciones.length);
 recomendaciones.forEach(rec => {
-  console.log(`${rec.nombre} - Puntuación: ${rec.puntuacion}`);
+  console.log(`${rec.nombre} - ${rec.categoria}`);
 });
 ```
 
 **Salida esperada:**
 ```
 Recomendaciones generadas: 3
-Monitor Curvo 27" - Puntuación: 92
-Teclado Mecánico RGB - Puntuación: 87
-Webcam HD - Puntuación: 78
+Monitor 27" 4K - Electronica
+Silla ergonómica Comfort - Muebles
+Teclado mecánico RGB - Electronica
 ```
 
 ---
@@ -362,7 +356,7 @@ Webcam HD - Puntuación: 78
 **Map de taxonomía:**
 ```javascript
 Map {
-  "Electrónica" => {
+  "Electronica" => {
     etiquetas: Set {"tecnología", "gaming", "portátil"},
     productos: Set {101, 102, 103},
     popularidad: 85
@@ -388,14 +382,14 @@ Map {
 ```javascript
 const taxonomia = construirTaxonomia();
 console.log("Taxonomía construida con", taxonomia.size, "categorías");
-const electronica = taxonomia.get("Electrónica");
-console.log("Etiquetas en Electrónica:", electronica.etiquetas.size);
+const electronica = taxonomia.get("Electronica");
+console.log("Etiquetas en Electronica:", electronica.etiquetas.size);
 ```
 
 **Salida esperada:**
 ```
-Taxonomía construida con 8 categorías
-Etiquetas en Electrónica: 15
+Taxonomía construida con 3 categorías
+Etiquetas en Electronica: 5
 ```
 
 #### 2. `sugerirEtiquetas(idProducto)`
@@ -403,62 +397,49 @@ Etiquetas en Electrónica: 15
 **Qué debes hacer:**
 - Obtén el producto específico
 - Analiza sus etiquetas actuales y categoría
-- Busca en la taxonomía qué etiquetas aparecen frecuentemente con las etiquetas actuales
-- Identifica etiquetas populares en la misma categoría que el producto no tiene
-- Calcula puntuación de sugerencia para cada etiqueta:
-  - Relación con etiquetas existentes (60%)
-  - Popularidad en categoría (40%)
-- Devuelve array de etiquetas sugeridas con puntuación
+- Identifica otras etiquetas populares en la misma categoría que el producto no tiene
+- Calcula frecuencia de cada etiqueta sugerida
+- Devuelve array de etiquetas sugeridas con frecuencia
 
 **Ejemplo de llamada:**
 ```javascript
 const sugerencias = sugerirEtiquetas(101);
 console.log("Sugerencias para producto 101:", sugerencias.length);
 sugerencias.forEach(sug => {
-  console.log(`${sug.etiqueta} - Puntuación: ${sug.puntuacion}`);
+  console.log(`${sug.etiqueta} - Frecuencia: ${sug.frecuencia}`);
 });
 ```
 
 **Salida esperada:**
 ```
-Sugerencias para producto 101: 3
-profesional - Puntuación: 85
-productividad - Puntuación: 78
-oficina - Puntuación: 72
+Sugerencias para producto 101: 2
+gaming - Frecuencia: 3
+trabajo - Frecuencia: 2
 ```
 
-#### 3. `analizarRelacionesEtiquetas()`
+#### 3. `contarEtiquetasPorCategoria()`
 
 **Qué debes hacer:**
-- Para cada producto, analiza co-ocurrencia de etiquetas
-- Crea objeto de relaciones donde clave = "etiqueta1-etiqueta2"
-- Calcula fuerza de relación basada en número de productos que comparten ambas etiquetas
-- Identifica relaciones fuertes (fuerza ≥ 3) y débiles (fuerza = 1)
-- Devuelve objeto con relaciones fuertes, débiles y relación más fuerte
+- Para cada categoría, cuenta cuántas veces aparece cada etiqueta
+- Crea objeto con estructura: {categoria: {etiqueta: contador}}
+- Identifica las etiquetas más populares por categoría
+- Devuelve objeto con conteos y etiquetas más populares
 
 **Ejemplo de llamada:**
 ```javascript
-const relaciones = analizarRelacionesEtiquetas();
-console.log("Relaciones fuertes:", relaciones.fuertes.length);
-console.log("Relación más fuerte:", relaciones.masFuerte);
-console.table(relaciones.topRelaciones);
+const conteos = contarEtiquetasPorCategoria();
+console.log("Etiquetas populares en Electronica:");
+conteos.Electronica.populares.forEach(etq => {
+  console.log(`${etq.nombre}: ${etq.contador} productos`);
+});
 ```
 
 **Salida esperada:**
-```javascript
-{
-  fuertes: [
-    { etiqueta1: "tecnología", etiqueta2: "gaming", fuerza: 8 }
-  ],
-  debiles: [
-    { etiqueta1: "hogar", etiqueta2: "deportivo", fuerza: 1 }
-  ],
-  masFuerte: {
-    etiqueta1: "tecnología",
-    etiqueta2: "gaming",
-    fuerza: 8
-  }
-}
+```
+Etiquetas populares en Electronica:
+gaming: 3 productos
+trabajo: 2 productos
+portátil: 1 productos
 ```
 
 ---
@@ -537,7 +518,7 @@ const carrito = crearCarrito(1);
 const gestion = carrito.gestionarCarrito();
 
 gestion.agregar(101, 2);
-gestion.agregar(205, 1);
+gestion.agregar(104, 1);
 console.log("Productos en carrito:", gestion.contar());
 
 const total = gestion.calcularTotal();
@@ -618,11 +599,11 @@ Map {
 #### 1. `construirIndiceInvertido()`
 
 **Qué debes hacer:**
-- Procesa todos los productos y usuarios
-- Para cada término en nombres, descripciones, categorías:
+- Procesa todos los productos
+- Para cada término en nombres, descripciones, categorias:
   - Crea entrada en Map si no existe
   - Agrega IDs de productos a Set
-  - Calcula relevancia basada en frecuencia
+  - Calcula frecuencia de aparición
 - Elimina palabras comunes (de, la, el, en, con)
 - Guarda índice en LocalStorage
 - Devuelve Map construido
@@ -636,62 +617,58 @@ console.log("Término 'laptop':", indice.get("laptop"));
 
 **Salida esperada:**
 ```
-Índice construido con 1250 términos
-Término 'laptop': { productos: Set {101, 102, 103}, relevancia: 15 }
+Índice construido con 50 términos
+Término 'laptop': { productos: Set {101}, frecuencia: 1 }
 ```
 
-#### 2. `buscarConCache(termino, tipo = "productos")`
+#### 2. `buscarProductos(termino)`
 
 **Qué debes hacer:**
-- Genera clave de caché: `${termino}_${tipo}`
-- Primero busca en Map de caché:
-  - Si existe y no ha expirado (24h), devolver desde caché
-- Si no está en caché:
-  - Busca en índice invertido
-  - Convierte IDs a objetos completos
-  - Guarda en caché con timestamp actual
-- Devuelve array de resultados y metadata
+- Busca el término en el Map de índice
+- Obtén el Set de IDs de productos
+- Convierte IDs a objetos de productos completos
+- Ordena resultados por valoración descendente
+- Devuelve array de productos encontrados
 
 **Ejemplos de llamada:**
 ```javascript
-const resultados1 = buscarConCache("laptop");
-console.log("Resultados (desde índice):", resultados1.resultados.length);
+const resultados1 = buscarProductos("laptop");
+console.log("Resultados para 'laptop':", resultados1.length);
 
-const resultados2 = buscarConCache("laptop");
-console.log("Resultados (desde caché):", resultados2.desdeCache);
+const resultados2 = buscarProductos("gaming");
+console.log("Resultados para 'gaming':", resultados2.length);
 ```
 
 **Salida esperada:**
 ```
-Resultados (desde índice): 8
-Resultados (desde caché): true
+Resultados para 'laptop': 1
+Resultados para 'gaming': 3
 ```
 
 #### 3. `autocompletar(parcial)`
 
 **Qué debes hacer:**
 - Busca términos en índice que comiencen con el texto parcial
-- Ordena sugerencias por relevancia y frecuencia
+- Ordena sugerencias por frecuencia descendente
 - Limita a máximo 5 sugerencias
-- Para cada sugerencia, incluye número estimado de resultados
 - Devuelve array de sugerencias
 
 **Ejemplo de llamada:**
 ```javascript
 const sugerencias1 = autocompletar("lap");
 sugerencias1.forEach(sug => {
-  console.log(`${sug.termino} (${sug.resultados} resultados)`);
+  console.log(`${sug.termino} (${sug.frecuencia})`);
 });
 
-const sugerencias2 = autocompletar("s");
-console.log("Sugerencias para 's':", sugerencias2.length);
+const sugerencias2 = autocompletar("te");
+console.log("Sugerencias para 'te':", sugerencias2.length);
 ```
 
 **Salida esperada:**
 ```
-laptop (12 resultados)
-laptop gaming (5 resultados)
-Sugerencias para 's': 3
+laptop (1)
+teclado (2)
+Sugerencias para 'te': 2
 ```
 
 ---
@@ -770,7 +747,7 @@ notificaciones.slice(0, 2).forEach(not => {
 ```
 Notificaciones generadas: 3
 stock_bajo: Stock bajo en Laptop Gaming Pro
-nuevo_producto: Nuevo producto en Electrónica
+nuevo_producto: Nuevo producto en Electronica
 ```
 
 #### 3. `procesarNotificaciones()`
@@ -884,10 +861,10 @@ Colección duplicada: false
 ```javascript
 const gestion = gestionarProductosColeccion("tecnologia_oficina_1642248000000");
 gestion.agregar(101);
-gestion.agregar(205);
+gestion.agregar(104);
 console.log("Productos en colección:", gestion.obtenerTodos().length);
 
-gestion.eliminar(205);
+gestion.eliminar(104);
 console.log("Productos después de eliminar:", gestion.obtenerTodos().length);
 ```
 
@@ -920,7 +897,7 @@ console.log("Valoración promedio:", analisis.valoracionPromedio);
 **Salida esperada:**
 ```javascript
 {
-  categorias: ["Electrónica", "Muebles"],
+  categorias: ["Electronica", "Muebles"],
   valorTotal: 2845.95,
   valoracionPromedio: 4.4,
   rangoPrecios: { min: 49.99, max: 1299.99 },
@@ -1003,15 +980,15 @@ console.log("Producto 101 agregado:", resultado1);
 const resultado2 = agregarProductoComparacion(102);
 console.log("Producto 102 agregado:", resultado2);
 
-const resultado3 = agregarProductoComparacion(301); // Distinta categoría
-console.log("Producto 301:", resultado3);
+const resultado3 = agregarProductoComparacion(103); // Distinta categoría
+console.log("Producto 103:", resultado3);
 ```
 
 **Salida esperada:**
 ```
 Producto 101 agregado: true
 Producto 102 agregado: true
-Producto 301: false
+Producto 103: false
 ```
 
 #### 3. `generarTablaComparativa()`
@@ -1037,9 +1014,9 @@ tabla.filas.forEach(fila => {
 
 **Salida esperada:**
 ```
-Recomendación: Laptop Ultra
+Recomendación: Laptop Pro 15"
 Puntuación: 92
-Nombre: Laptop Gaming Pro | Laptop Ultra | Silla Ergonómica
+Nombre: Laptop Pro 15" | Monitor 27" 4K | Silla ergonómica
 Precio: 899.99€ ⭐ | 1299.99€ | 299.99€ ⭐⭐
 Valoración: 4.5 | 4.8 ⭐ | 4.2
 ```
@@ -1074,12 +1051,12 @@ Map {
 #### 1. `calcularMetricasProductos()`
 
 **Qué debes hacer:**
-- Para cada producto, analiza sus pedidos
+- Para cada producto, analiza los pedidos que lo incluyen
 - Calcula métricas básicas:
-  - Total unidades vendidas
-  - Ingresos totales (suma de precios × cantidad)
+  - Total unidades vendidas (basado en pedidos existentes)
+  - Ingresos totales (suma de precios × cantidad de pedidos)
   - Margen porcentual (simulado 40% del precio)
-  - Valoración promedio
+  - Valoración promedio (del array productos)
 - Guarda todas las métricas en Map
 - Persiste en LocalStorage
 
@@ -1095,70 +1072,64 @@ console.log("Ingresos:", laptopMetrics.ingresosTotales);
 
 **Salida esperada:**
 ```
-Métricas calculadas para 50 productos
-Ventas laptop: 150
-Ingresos: 134998.50
+Métricas calculadas para 8 productos
+Ventas laptop: 2
+Ingresos: 2599.98
 ```
 
-#### 2. `analizarRentabilidad(idProducto)`
+#### 2. `calcularRentabilidad(idProducto)`
 
 **Qué debes hacer:**
-- Obtiene métricas del producto
-- Calcula costes estimados:
+- Obtiene información del producto
+- Calcula costes simples:
   - Coste producto: 60% del precio
-  - Coste envío: 10% si < 100€, gratis si > 100€
-  - Costes procesamiento: 3% fijo
-- Calcula margen neto (ingresos - costes)
-- Identifica factores que afectan rentabilidad
-- Devuelve objeto con análisis completo
+  - Coste envío: 10€ si precio < 100€, gratis si precio ≥ 100€
+- Calcula margen neto (precio - costes)
+- Calcula porcentaje de rentabilidad
+- Devuelve objeto con análisis básico
 
 **Ejemplo de llamada:**
 ```javascript
-const rentabilidad = analizarRentabilidad(101);
-console.log("Margen neto:", rentabilidad.margenNeto.porcentual + "%");
-console.log("Costes totales:", rentabilidad.costesTotales);
-console.log("Ingresos netos:", rentabilidad.ingresosNetos);
+const rentabilidad = calcularRentabilidad(101);
+console.log("Margen neto:", rentabilidad.margenNeto + "€");
+console.log("Porcentaje rentabilidad:", rentabilidad.rentabilidadPorcentual + "%");
+console.log("Coste total:", rentabilidad.costoTotal + "€");
 ```
 
 **Salida esperada:**
 ```javascript
 {
-  margenNeto: { valor: 287.99, porcentual: 32.0 },
-  costesTotales: 612.00,
-  ingresosNetos: 287.99,
-  factoresRentabilidad: ["Alto volumen de ventas", "Buen precio unitario"]
+  margenNeto: 509.99,
+  rentabilidadPorcentual: 39.2,
+  costoTotal: 790.00,
+  precioVenta: 1299.99
 }
 ```
 
-#### 3. `generarAlertasRendimiento()`
+#### 3. `generarInformeProductos()`
 
 **Qué debes hacer:**
-- Analiza todas las métricas para identificar alertas
-- Tipos de alertas:
-  - "baja_rentabilidad": margen < 20%
-  - "bajas_ventas": < 10 unidades vendidas
-  - "baja_valoracion": valoración < 3.0
-- Para cada alerta, incluye urgencia y acción recomendada
-- Devuelve array de alertas ordenadas por urgencia
+- Analiza todos los productos con métricas calculadas
+- Agrupa por categorías
+- Identifica productos con:
+  - Mayor rentabilidad
+  - Mayor stock
+  - Menor valoración
+- Devuelve objeto con informe básico
 
 **Ejemplo de llamada:**
 ```javascript
-const alertas = generarAlertasRendimiento();
-console.log("Alertas generadas:", alertas.length);
-console.log("Alertas críticas:", alertas.filter(a => a.urgencia === "alta").length);
-
-alertas.slice(0, 3).forEach(alerta => {
-  console.log(`${alerta.tipo}: ${alerta.producto.nombre} - ${alerta.accion}`);
-});
+const informe = generarInformeProductos();
+console.log("Producto más rentable:", informe.masRentable.nombre);
+console.log("Producto con más stock:", informe.masStock.nombre);
+console.log("Categoría con más productos:", informe.categoriaConMasProductos);
 ```
 
 **Salida esperada:**
 ```
-Alertas generadas: 8
-Alertas críticas: 3
-baja_rentabilidad: Mouse Básico - Revisar costes o aumentar precio
-bajas_ventas: Webcam Básica - Mejorar marketing o eliminar producto
-baja_valoracion: Teclado Simple - Investigar problemas de calidad
+Producto más rentable: Laptop Pro 15"
+Producto con más stock: Auriculares Bluetooth X5
+Categoría con más productos: Electronica
 ```
 
 ---
@@ -1180,7 +1151,7 @@ Map {
     tema: "oscuro",
     idioma: "es",
     moneda: "EUR",
-    categoriasFavoritas: Set {"Electrónica", "Muebles"},
+    categoriasFavoritas: Set {"Electronica", "Muebles"},
     notificaciones: true
   }
 }
@@ -1257,7 +1228,7 @@ Moneda actualizada: true
 **Ejemplo de llamada:**
 ```javascript
 // Primero agregar algunas categorías favoritas
-actualizarPreferencia(1, "categoriasFavoritas", new Set(["Electrónica", "Muebles"]));
+actualizarPreferencia(1, "categoriasFavoritas", new Set(["Electronica", "Muebles"]));
 
 const recomendaciones = obtenerRecomendacionesPersonalizadas(1);
 console.log("Recomendaciones personalizadas:", recomendaciones.length);
@@ -1269,11 +1240,11 @@ recomendaciones.forEach(rec => {
 **Salida esperada:**
 ```
 Recomendaciones personalizadas: 5
-Laptop Gaming Pro - 899.99 EUR
-Silla Ergonómica - 299.99 EUR
-Monitor Curvo - 449.99 EUR
-Teclado Mecánico - 89.99 EUR
-Mouse Gaming - 49.99 EUR
+Laptop Pro 15" - 1299.99 EUR
+Silla ergonómica Comfort - 249.99 EUR
+Monitor 27" 4K - 329.99 EUR
+Teclado mecánico RGB - 89.99 EUR
+Ratón gaming inalámbrico - 59.99 EUR
 ```
 
 ---
@@ -1363,11 +1334,11 @@ console.log("Categorías más vistas:", historial.categoriasMasVistas);
 **Salida esperada:**
 ```
 Últimas 5 visitas:
-Silla Ergonómica - 120 segundos
-Laptop Gaming Pro - 30 segundos
-Laptop Gaming Pro - 45 segundos
-Producto más visitado: Laptop Gaming Pro
-Categorías más vistas: ["Electrónica", "Muebles"]
+Silla ergonómica Comfort - 120 segundos
+Laptop Pro 15" - 30 segundos
+Laptop Pro 15" - 45 segundos
+Producto más visitado: Laptop Pro 15"
+Categorías más vistas: ["Electronica", "Muebles"]
 ```
 
 #### 3. `generarRecomendacionesBasadasEnHistorial(idUsuario)`
@@ -1393,10 +1364,10 @@ recomendaciones.forEach(rec => {
 **Salida esperada:**
 ```
 Recomendaciones basadas en historial: 4
-Monitor Curvo 27" - Similar a productos de Electrónica que has visitado
-Teclado Mecánico RGB - Complemento ideal para laptops gaming
-Webcam HD - Popular entre usuarios que visitan productos de oficina
-Altavoz Bluetooth - Categoría Electrónica con buena valoración
+Monitor 27" 4K - Similar a productos de Electronica que has visitado
+Teclado Mecánico RGB - Complemento ideal para laptops
+Ratón gaming inalámbrico - Popular entre usuarios que visitan productos de oficina
+Auriculares Bluetooth - Categoria Electronica con buena valoración
 ```
 
 ---
@@ -1418,7 +1389,7 @@ Map {
     codigo: "VERANO20",
     tipo: "porcentaje",
     valor: 20,
-    categoriaAplicable: "Electrónica",
+    categoriaAplicable: "Electronica",
     usosRestantes: 100,
     fechaExpiracion: "2024-08-31"
   }
@@ -1445,7 +1416,7 @@ Map {
 **Ejemplos de llamada:**
 ```javascript
 const resultado1 = crearPromocion("VERANO20", "porcentaje", 20, {
-  categoriaAplicable: "Electrónica",
+  categoriaAplicable: "Electronica",
   minimoCompra: 100
 });
 console.log("Promoción creada:", resultado1);
@@ -1481,8 +1452,8 @@ Promoción fija creada: true
 **Ejemplos de llamada:**
 ```javascript
 const productos = [
-  { id: 101, categoria: "Electrónica", precio: 899.99 },
-  { id: 205, categoria: "Muebles", precio: 299.99 }
+  { id: 101, categoria: "Electronica", precio: 1299.99 },
+  { id: 104, categoria: "Muebles", precio: 249.99 }
 ];
 
 const resultado1 = aplicarDescuento("VERANO20", productos);
@@ -1515,8 +1486,8 @@ Código válido: false
 **Ejemplo de llamada:**
 ```javascript
 const productos = [
-  { id: 101, categoria: "Electrónica", precio: 899.99 },
-  { id: 205, categoria: "Muebles", precio: 299.99 }
+  { id: 101, categoria: "Electronica", precio: 1299.99 },
+  { id: 104, categoria: "Muebles", precio: 249.99 }
 ];
 
 const disponibles = obtenerPromocionesDisponibles(1199.98, productos);
@@ -1676,7 +1647,7 @@ Reseña no encontrada: null
 Map {
   1 => {
     idUsuario: 1,
-    categoriasPreferidas: ["Electrónica", "Muebles"],
+    categoriasPreferidas: ["Electronica", "Muebles"],
     rangoPrecio: { min: 100, max: 1000 },
     productosComprados: Set {101, 205},
     productosVistos: Set {102, 308}
@@ -1715,7 +1686,7 @@ console.log("Productos comprados:", perfil.productosComprados.size);
 **Salida esperada:**
 ```
 Perfil construido para usuario 1
-Categorías preferidas: ["Electrónica", "Muebles"]
+Categorías preferidas: ["Electronica", "Muebles"]
 Rango de precio: { min: 100, max: 1000, promedio: 550 }
 Productos comprados: 5
 ```
@@ -1729,12 +1700,10 @@ Productos comprados: 5
   - Rango de precio del perfil
   - Stock disponible > 0
   - Excluir productos ya comprados
-- Calcula puntuación de recomendación:
-  - Coincidencia con categorías preferidas (40%)
-  - Ajuste a rango de precio (30%)
-  - Valoración del producto (20%)
-  - Popularidad (ventas) (10%)
-- Ordena por puntuación descendente
+- Ordena productos resultantes por:
+  1. Categoría preferida primero
+  2. Mayor valoración
+- Aplica ordenación simple según los criterios anteriores
 - Limita a cantidad solicitada
 - Devuelve array de productos recomendados
 
@@ -1743,19 +1712,19 @@ Productos comprados: 5
 const recomendaciones = generarRecomendacionesBasadasPerfil(1, 3);
 console.log("Recomendaciones generadas:", recomendaciones.length);
 recomendaciones.forEach(rec => {
-  console.log(`${rec.nombre} - Puntuación: ${rec.puntuacion} - ${rec.justificacion}`);
+  console.log(`${rec.nombre} - ${rec.categoria} - ${rec.valoracion}⭐`);
 });
 ```
 
 **Salida esperada:**
 ```
 Recomendaciones generadas: 3
-Laptop Ultra - Puntuación: 92 - Coincide con categoría Electrónica y rango de precio
-Monitor Curvo - Puntuación: 85 - Alta valoración y ajuste perfecto a rango de precio
-Silla Ejecutiva - Puntuación: 78 - Segunda categoría preferida con excelente relación calidad-precio
+Laptop Pro 15" - Electronica - 4.5⭐
+Monitor 27" 4K - Electronica - 4.8⭐
+Teclado mecánico RGB - Electronica - 4.4⭐
 ```
 
-#### 3. `evaluarCalidadRecomendaciones(idUsuario, recomendaciones)`
+#### 3. `generarInformeRecomendaciones(idUsuario, recomendaciones)`
 
 **Qué debe hacer:**
 - Analiza calidad de las recomendaciones generadas:
@@ -1773,24 +1742,38 @@ Silla Ejecutiva - Puntuación: 78 - Segunda categoría preferida con excelente r
 **Ejemplo de llamada:**
 ```javascript
 const recomendaciones = generarRecomendacionesBasadasPerfil(1, 5);
-const calidad = evaluarCalidadRecomendaciones(1, recomendaciones);
-console.log("Diversidad de categorías:", calidad.diversidad);
-console.log("Relevancia precio:", calidad.relevanciaPrecio);
-console.log("Calidad promedio:", calidad.calidadPromedio);
-console.log("Sugerencias de mejora:", calidad.sugerencias);
+const informe = generarInformeRecomendaciones(1, recomendaciones);
+console.log("Categorías recomendadas:", Object.keys(informe.categorias));
+console.log("Precio promedio:", informe.precioPromedio + "€");
+console.log("Valoración promedio:", informe.valoracionPromedio);
 ```
 
 **Salida esperada:**
-```javascript
-{
-  diversidad: 0.8,
-  relevanciaPrecio: 0.9,
-  calidadPromedio: 4.3,
-  sugerencias: [
-    "Incluir más productos de categoría Muebles",
-    "Considerar productos ligeramente por encima del rango de precio",
-    "Diversificar más en rangos de valoración"
-  ]
-}
+```
+Categorías recomendadas: ["Electronica", "Muebles"]
+Precio promedio: 879.99€
+Valoración promedio: 4.6
 ```
 
+---
+
+## Notas Finales
+
+**Criterios de evaluación:**
+
+- **Funcionalidad Correcta (40%):** El código funciona como esperado
+- **Uso Adecuado de Estructuras (30%):** Elección correcta de arrays, objetos, Map, Set, LocalStorage
+- **Calidad del Código (20%):** Buenas prácticas, modularidad, manejo de errores
+- **Persistencia y Estado (10%):** Uso correcto de LocalStorage y gestión de estado
+
+**Consejos para los alumnos:**
+
+1. **Planificación:** Lee todo el enunciado antes de empezar a programar
+2. **Pruebas:** Prueba cada función individualmente antes de integrar
+3. **Validación:** Siempre valida los datos de entrada
+4. **Persistencia:** Acuérdate de guardar cambios en LocalStorage
+5. **Documentación:** Comenta las partes más complejas del código
+
+**Tiempo límite:** 2-3 horas por ejercicio
+
+¡Mucha suerte en el examen!
