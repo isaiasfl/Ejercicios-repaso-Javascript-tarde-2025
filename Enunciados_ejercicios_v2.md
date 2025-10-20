@@ -12,8 +12,7 @@ Los enunciados son detallados para que sepas exactamente qué se espera de ti. C
 
 **Requisitos técnicos:**
 - Cada ejercicio en su carpeta: `src/helpers/ejercicioXX/index.js`
-- Exporta funciones: `export default { funcion1, funcion2, funcion3 }`
-- Importa en app.js: `import ejercicioXX from './helpers/ejercicioXX/index.js'`
+- Importa en app.js: `import ejercicioXX from './helpers/ejercicioXX/index.js' para hacer pruebas, pero cuando lo subas a github para hacer la PR a la rama main del profesor quítalo y deja el app como estaba`
 - Usa datos de `src/db/data.js` cuando se indique
 - Muestra resultados con `console.log()`, `console.table()`, `console.group()`
 
@@ -1795,25 +1794,3 @@ console.log("Sugerencias de mejora:", calidad.sugerencias);
 }
 ```
 
----
-
-## Notas Finales
-
-**Criterios de evaluación:**
-
-- **Funcionalidad Correcta (40%):** El código funciona como esperado
-- **Uso Adecuado de Estructuras (30%):** Elección correcta de arrays, objetos, Map, Set, LocalStorage
-- **Calidad del Código (20%):** Buenas prácticas, modularidad, manejo de errores
-- **Persistencia y Estado (10%):** Uso correcto de LocalStorage y gestión de estado
-
-**Consejos para los alumnos:**
-
-1. **Planificación:** Lee todo el enunciado antes de empezar a programar
-2. **Pruebas:** Prueba cada función individualmente antes de integrar
-3. **Validación:** Siempre valida los datos de entrada
-4. **Persistencia:** Acuérdate de guardar cambios en LocalStorage
-5. **Documentación:** Comenta las partes más complejas del código
-
-**Tiempo límite:** 2-3 horas por ejercicio
-
-¡Mucha suerte en el examen!
