@@ -98,6 +98,22 @@ git push origin main
 
 Esto mantendrá tu repositorio **actualizado** sin perder tu trabajo.
 
+>#### Resumen de comandos:
+>
+>
+> 1. Ponte en tu rama principal
+>git checkout main
+>
+> 2. Descarga lo nuevo del original
+>git fetch upstream
+>
+> 3. Fusiona lo nuevo en tu rama
+>git merge upstream/main
+>
+> 4. Sube la rama actualizada a tu fork en GitHub
+>git push origin main
+>
+
 ---
 
 ### 5️⃣ Crear una rama para tu ejercicio
