@@ -1662,8 +1662,6 @@ Map {
 **Qué debe hacer:**
 - Analiza historial del usuario:
   - Pedidos realizados (categorías, rangos de precio)
-  - Productos visitados
-  - Búsquedas realizadas (si hay historial)
 - Identifica categorías preferidas por frecuencia
 - Determina rango de precio habitual
 - Crea objeto de perfil con:

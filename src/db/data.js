@@ -275,7 +275,7 @@ export const pedidos = [
     idUsuario: 1,
     productos: [
       { idProducto: 101, cantidad: 1, precioUnitario: 1299.99 },
-      { idProducto: 102, cantidad: 2, precioUnitario: 79.99 }
+      { idProducto: 103, cantidad: 2, precioUnitario: 79.99 }
     ],
     fecha: new Date("2023-01-20"),
     estado: "entregado",
